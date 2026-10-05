@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Thanh toán')}"></head>
+<body>
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+    <main>
+        <h1>Thanh toán</h1>
+        <div class="checkout">
+            <form th:action="@{/checkout}" method="post" class="card checkout-form">
+                <h2>Thông tin giao hàng</h2>
+                <label>Người nhận</label>
+                <input name="recipientName" th:value="${user.fullName}" required>
+                <label>Số điện thoại</label>
+                <input name="phone" th:value="${user.phone}" required>
+                <label>Địa chỉ</label>
+                <input name="address" th:value="${user.address}" required>
+                <label>Ghi chú</label>
+                <textarea name="note" rows="2"></textarea>
+
+                <h2>Phương thức thanh toán</h2>
+                <label class="radio">
+                    <input type="radio" name="paymentMethod" value="COD" checked>
+                    Thanh toán khi nhận hàng (COD)
+                </label>
+
+                <button class="btn full" type="submit">Đặt hàng</button>
+            </form>
+
+            <div class="card summary">
+                <h2>Đơn hàng</h2>
+                <ul>
+                    <li th:each="it : ${items}">
+                        <span th:text="${it.product.name} + ' x ' + ${it.quantity}">SP</span>
+                        <span th:text="${#numbers.formatDecimal(it.lineTotal,0,'COMMA',0,'POINT')} + ' đ'">0 đ</span>
+                    </li>
+                </ul>
+                <hr>
+                <p class="total">Tổng cộng:
+                    <b th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' đ'">0 đ</b>
+                </p>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

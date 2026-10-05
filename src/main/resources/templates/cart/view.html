@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Giỏ hàng')}"></head>
+<body>
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+    <main>
+        <h1>Giỏ hàng</h1>
+
+        <p th:if="${items.isEmpty()}" class="muted">
+            Giỏ hàng trống. <a th:href="@{/products}">Tiếp tục mua sắm</a>
+        </p>
+
+        <div th:unless="${items.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="it : ${items}">
+                    <td th:text="${it.product.name}">SP</td>
+                    <td th:text="${#numbers.formatDecimal(it.product.price,0,'COMMA',0,'POINT')} + ' đ'">0 đ</td>
+                    <td>
+                        <form th:action="@{/cart/update}" method="post" class="qty-form">
+                            <input type="hidden" name="cartItemId" th:value="${it.id}">
+                            <input type="number" name="quantity" th:value="${it.quantity}"
+                                   min="1" th:max="${it.product.stock}">
+                            <button class="btn small" type="submit">Cập nhật</button>
+                        </form>
+                        <small class="muted">Tối đa: <span th:text="${it.product.stock}">0</span></small>
+                    </td>
+                    <td th:text="${#numbers.formatDecimal(it.lineTotal,0,'COMMA',0,'POINT')} + ' đ'">0 đ</td>
+                    <td>
+                        <form th:action="@{/cart/remove}" method="post"
+                              onsubmit="return confirm('Xóa sản phẩm này khỏi giỏ?')">
+                            <input type="hidden" name="cartItemId" th:value="${it.id}">
+                            <button class="danger-link" type="submit">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="cart-footer">
+                <span class="total">Tổng cộng:
+                    <b th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' đ'">0 đ</b>
+                </span>
+                <a th:href="@{/checkout}" class="btn">Thanh toán (COD)</a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

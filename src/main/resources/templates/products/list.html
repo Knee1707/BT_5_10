@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Sản phẩm')}"></head>
+<body>
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+    <main>
+        <h1>Sản phẩm</h1>
+        <div class="grid">
+            <div class="product" th:each="p : ${products}">
+                <div class="thumb" th:text="${p.name.substring(0,1)}">A</div>
+                <h3 th:text="${p.name}">Tên</h3>
+                <p class="desc" th:text="${p.description}">Mô tả</p>
+                <p class="price" th:text="${#numbers.formatDecimal(p.price,0,'COMMA',0,'POINT')} + ' đ'">0 đ</p>
+                <p class="stock">Tồn kho: <span th:text="${p.stock}">0</span></p>
+                <form th:action="@{/cart/add}" method="post" class="add-form">
+                    <input type="hidden" name="productId" th:value="${p.id}">
+                    <input type="number" name="quantity" value="1" min="1" th:max="${p.stock}"
+                           th:disabled="${p.stock == 0}">
+                    <button class="btn" type="submit" th:disabled="${p.stock == 0}"
+                            th:text="${p.stock == 0 ? 'Hết hàng' : 'Thêm vào giỏ'}">Thêm vào giỏ</button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

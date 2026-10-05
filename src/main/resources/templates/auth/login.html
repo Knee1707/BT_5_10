@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Đăng nhập')}"></head>
+<body>
+<div class="auth-page">
+    <div class="auth-card">
+        <h1>Đăng nhập</h1>
+        <div th:if="${param.error}" class="alert error">Sai tài khoản hoặc mật khẩu.</div>
+        <div th:if="${param.logout}" class="alert success">Bạn đã đăng xuất.</div>
+        <div th:if="${success}" class="alert success" th:text="${success}"></div>
+        <form th:action="@{/login}" method="post">
+            <label>Username</label>
+            <input name="username" required autofocus>
+            <label>Mật khẩu</label>
+            <input type="password" name="password" required>
+            <button class="btn full" type="submit">Đăng nhập</button>
+        </form>
+        <p>Chưa có tài khoản? <a th:href="@{/register}">Đăng ký</a></p>
+    </div>
+</div>
+</body>
+</html>

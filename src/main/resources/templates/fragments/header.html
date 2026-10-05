@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header" class="header">
+    <a th:href="@{/products}" class="brand">MINI SHOP</a>
+    <nav>
+        <a th:href="@{/products}">Sản phẩm</a>
+        <a th:href="@{/cart}">Giỏ hàng</a>
+        <a th:href="@{/orders}">Đơn hàng của tôi</a>
+    </nav>
+    <div class="account" th:if="${#authorization.expression('isAuthenticated()')}">
+        <span th:text="${#authentication.principal.fullName}">User</span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="link-button">Đăng xuất</button>
+        </form>
+    </div>
+    <div th:unless="${#authorization.expression('isAuthenticated()')}">
+        <a th:href="@{/login}">Đăng nhập</a>
+    </div>
+</header>
+</body>
+</html>

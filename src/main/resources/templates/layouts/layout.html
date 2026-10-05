@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title ?: 'Shop'}">Shop</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div th:fragment="page(content)">
+    <header th:replace="~{fragments/header :: header}"></header>
+    <main class="container">
+        <div th:if="${success}" class="alert success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert error" th:text="${error}"></div>
+        <div th:replace="${content}"></div>
+    </main>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</div>
+</body>
+</html>

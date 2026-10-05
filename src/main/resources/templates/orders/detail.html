@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Chi tiết đơn hàng')}"></head>
+<body>
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+    <main>
+        <div class="order-head">
+            <h1 th:text="'Đơn hàng #' + ${order.id}">Đơn hàng</h1>
+            <span class="badge" th:classappend="${'st-' + order.status}" th:text="${order.status.label}">Trạng thái</span>
+        </div>
+
+        <div class="card">
+            <p><b>Ngày đặt:</b> <span th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+            <p><b>Người nhận:</b> <span th:text="${order.recipientName}"></span></p>
+            <p><b>Số điện thoại:</b> <span th:text="${order.phone}"></span></p>
+            <p><b>Địa chỉ:</b> <span th:text="${order.address}"></span></p>
+            <p><b>Ghi chú:</b> <span th:text="${order.note}"></span></p>
+            <p><b>Thanh toán:</b> <span th:text="${order.paymentMethod}"></span></p>
+        </div>
+
+        <table>
+            <thead>
+            <tr><th>Sản phẩm</th><th>Đơn giá</th><th>Số lượng</th><th>Thành tiền</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="it : ${order.items}">
+                <td th:text="${it.productName}">SP</td>
+                <td th:text="${#numbers.formatDecimal(it.price,0,'COMMA',0,'POINT')} + ' đ'">0 đ</td>
+                <td th:text="${it.quantity}">1</td>
+                <td th:text="${#numbers.formatDecimal(it.lineTotal,0,'COMMA',0,'POINT')} + ' đ'">0 đ</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="cart-footer">
+            <span class="total">Tổng cộng:
+                <b th:text="${#numbers.formatDecimal(order.totalAmount,0,'COMMA',0,'POINT')} + ' đ'">0 đ</b>
+            </span>
+            <span>
+                <a th:href="@{/orders}" class="btn secondary">Quay lại</a>
+                <form th:action="@{/orders/{id}/cancel(id=${order.id})}" method="post" style="display:inline"
+                      th:if="${order.status.name() == 'NEW' or order.status.name() == 'CONFIRMED' or order.status.name() == 'PREPARING'}"
+                      onsubmit="return confirm('Hủy đơn hàng này?')">
+                    <button type="submit" class="btn danger">Hủy đơn</button>
+                </form>
+            </span>
+        </div>
+    </main>
+</div>
+</body>
+</html>
